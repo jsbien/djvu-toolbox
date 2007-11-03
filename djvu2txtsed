@@ -1,0 +1,19 @@
+#!/usr/bin/python
+from sys import argv, stdout
+from subprocess import Popen as popen, PIPE
+
+file_name = argv[1]
+
+p = popen(['/usr/bin/djvused', '-e', 'output-txt', file_name], stdout = PIPE)
+n = 1
+try:
+	for line in p.stdout:
+		if line.startswith("select '"):
+			line = 'select %d\n' % n
+			n += 1
+		stdout.write(line)
+finally:
+	p.wait()
+
+
+# vim:ts=4 sw=4 noet
