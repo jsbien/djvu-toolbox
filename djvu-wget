@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# To the extent possible under law, Jakub Wilk has waived all copyright and
+# related or neighboring rights to this work:
+#
+# http://creativecommons.org/publicdomain/zero/1.0/
+
+if [ $# -ne 1 ]
+then
+  echo "Usage: $0 <uri>"
+  exit 1
+fi
+uri="$1"
+wget -nv -- "$1"
+base=`printf '%s' "$uri" | sed -e 's/\(.*\)[/].*/\1/'`
+index=`printf '%s' "$uri" | sed -e 's/.*[/]\(.*\)/\1/'`
+printf "$base/%s\n" `djvudump "$index" | sed -n -e '/.*-> \(.*\)/ { s//\1/p; }'` | wget -nv -i -
