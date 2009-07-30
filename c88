@@ -88,6 +88,8 @@ mask_image="$2"
 eval `$identify -format 'width=%w; height=%h; hdpi=%x; vdpi=%y' "$input_image" | sed -e 's/[.][0-9]\+//g' -e 's/[A-Z][A-Za-z]*//' | tr -dc '0-9a-z=;'`
 
 [ -z "$dpi" ] && dpi=`printf 'sqrt(%d * %d)\n' "$hdpi" "$vdpi" | bc`
+[ "$dpi" -lt 72 ] && dpi=72
+[ "$dpi" -gt 6000 ] && dpi=6000
 
 fgwidth=$(( (width+fg_subsample-1)/fg_subsample ))
 fgheight=$(( (height+fg_subsample-1)/fg_subsample ))
