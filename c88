@@ -123,9 +123,8 @@ djvuextract "$tmpdir/fg.djvu" BG44="$tmpdir/fg.iw44" 2>/dev/null
 djvuextract "$tmpdir/bg.djvu" BG44="$tmpdir/bg.iw44" 2>/dev/null
 
 cjb2 $cjb2options "$tmpdir/mask.pbm" "$tmpdir/mask.djvu"
-djvuextract "$tmpdir/mask.djvu" "Sjbz=$tmpdir/mask.jb2"
 
-djvumake "$tmpdir/image.djvu" "INFO=$width,$height,$dpi" "Sjbz=$tmpdir/mask.jb2" "FG44=$tmpdir/fg.iw44" "BG44=$tmpdir/bg.iw44"
+djvumake "$tmpdir/image.djvu" "INFO=$width,$height,$dpi" "Sjbz=$tmpdir/mask.djvu" "FG44=$tmpdir/fg.iw44" "BG44=$tmpdir/bg.iw44"
 
 cat "$tmpdir/image.djvu"
 
