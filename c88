@@ -85,7 +85,7 @@ fi
 input_image="$1"
 mask_image="$2"
 
-eval `$identify -format 'width=%w; height=%h; hdpi=%x; vdpi=%y' "$input_image" | sed -e 's/[A-Z][A-Za-z]*//' | tr -dc '0-9a-z=;'`
+eval `$identify -format 'width=%w; height=%h; hdpi=%x; vdpi=%y' "$input_image" | sed -e 's/[.][0-9]\+//g' -e 's/[A-Z][A-Za-z]*//' | tr -dc '0-9a-z=;'`
 
 [ -z "$dpi" ] && dpi=`printf 'sqrt(%d * %d)\n' "$hdpi" "$vdpi" | bc`
 
