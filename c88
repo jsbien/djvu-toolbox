@@ -32,7 +32,7 @@ fi
 fg_subsample=6
 fg_slices=100
 bg_subsample=3
-bg_slices=72+10+4+9
+bg_slices=72+10+6+7
 dpi=''
 c44options=
 cjb2options=''
