@@ -109,7 +109,7 @@ then
   $convert -scale "$size!" -threshold '75%' "$input_image" "$tmpdir/mask.pbm"
 else
   $convert -scale "$fgsize!" -negate "$mask_image" "$tmpdir/fgmask.pbm"
-  $convert -scale "$bgsize!" $convolve '99%' "$mask_image" "$tmpdir/bgmask.pbm"
+  $convert -scale "$bgsize!" $convolve "$mask_image" "$tmpdir/bgmask.pbm"
   $convert -scale "$size!" "$mask_image" "$tmpdir/mask.pbm"
 fi
 
