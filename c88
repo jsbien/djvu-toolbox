@@ -96,14 +96,15 @@ bgheight=$(( (height+bg_subsample-1)/bg_subsample ))
 
 tmpdir=`mktemp -d /tmp/c88.XXXXXXXX` || exit 1
 
+convolve="-convolve 1,1,1,1,1,1,1,1,1 -threshold 99%"
 if [ -z "$mask_image" ]
 then
   $convert -scale "${fgwidth}x${fgheight}" -threshold '75%' -negate "$input_image" "$tmpdir/fgmask.pbm"
-  $convert -scale "${bgwidth}x${bgheight}" -convolve 1,1,1,1,1,1,1,1,1 -threshold '85%' "$input_image" "$tmpdir/bgmask.pbm"
+  $convert -scale "${bgwidth}x${bgheight}" -threshold '75%' $convolve "$input_image" "$tmpdir/bgmask.pbm"
   $convert -scale "${width}x${height}" -threshold '75%' "$input_image" "$tmpdir/mask.pbm"
 else
   $convert -scale "${fgwidth}x${fgheight}" -negate "$mask_image" "$tmpdir/fgmask.pbm"
-  $convert -scale "${bgwidth}x${bgheight}" -convolve 1,1,1,1,1,1,1,1,1 -threshold '99%' "$mask_image" "$tmpdir/bgmask.pbm"
+  $convert -scale "${bgwidth}x${bgheight}" $convolve '99%' "$mask_image" "$tmpdir/bgmask.pbm"
   $convert -scale "${width}x${height}" "$mask_image" "$tmpdir/mask.pbm"
 fi
 
