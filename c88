@@ -91,27 +91,30 @@ eval `$identify -format 'width=%w; height=%h; hdpi=%x; vdpi=%y' "$input_image" |
 [ "$dpi" -lt 72 ] && dpi=72
 [ "$dpi" -gt 6000 ] && dpi=6000
 
+size="${width}x${height}"
 fgwidth=$(( (width+fg_subsample-1)/fg_subsample ))
 fgheight=$(( (height+fg_subsample-1)/fg_subsample ))
+fgsize="${fgwidth}x${fgheight}"
 bgwidth=$(( (width+bg_subsample-1)/bg_subsample ))
 bgheight=$(( (height+bg_subsample-1)/bg_subsample ))
+bgsize="${bgwidth}x${bgheight}"
 
 tmpdir=`mktemp -d /tmp/c88.XXXXXXXX` || exit 1
 
 convolve="-convolve 1,1,1,1,1,1,1,1,1 -threshold 99%"
 if [ -z "$mask_image" ]
 then
-  $convert -scale "${fgwidth}x${fgheight}" -threshold '75%' -negate "$input_image" "$tmpdir/fgmask.pbm"
-  $convert -scale "${bgwidth}x${bgheight}" -threshold '75%' $convolve "$input_image" "$tmpdir/bgmask.pbm"
-  $convert -scale "${width}x${height}" -threshold '75%' "$input_image" "$tmpdir/mask.pbm"
+  $convert -scale "$fgsize!" -threshold '75%' -negate "$input_image" "$tmpdir/fgmask.pbm"
+  $convert -scale "$bgsize!" -threshold '75%' $convolve "$input_image" "$tmpdir/bgmask.pbm"
+  $convert -scale "$size!" -threshold '75%' "$input_image" "$tmpdir/mask.pbm"
 else
-  $convert -scale "${fgwidth}x${fgheight}" -negate "$mask_image" "$tmpdir/fgmask.pbm"
-  $convert -scale "${bgwidth}x${bgheight}" $convolve '99%' "$mask_image" "$tmpdir/bgmask.pbm"
-  $convert -scale "${width}x${height}" "$mask_image" "$tmpdir/mask.pbm"
+  $convert -scale "$fgsize!" -negate "$mask_image" "$tmpdir/fgmask.pbm"
+  $convert -scale "$bgsize!" $convolve '99%' "$mask_image" "$tmpdir/bgmask.pbm"
+  $convert -scale "$size!" "$mask_image" "$tmpdir/mask.pbm"
 fi
 
-$convert -scale "${fgwidth}x${fgheight}" "$input_image" "$tmpdir/fg.ppm"
-$convert -scale "${bgwidth}x${bgheight}" "$input_image" "$tmpdir/bg.ppm"
+$convert -scale "$fgsize!" "$input_image" "$tmpdir/fg.ppm"
+$convert -scale "$bgsize!" "$input_image" "$tmpdir/bg.ppm"
 
 c44 $c44options -slice "$fg_slices" -mask "$tmpdir/fgmask.pbm" "$tmpdir/fg.ppm" "$tmpdir/fg.djvu"
 c44 $c44options -slice "$bg_slices" -mask "$tmpdir/bgmask.pbm" "$tmpdir/bg.ppm" "$tmpdir/bg.djvu"
