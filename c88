@@ -70,15 +70,15 @@ do
   esac
 done
 
-if tty <&1 >/dev/null
-then
-  printf "I won't write DjVu data to a terminal.\n" >&2
-  exit 1
-fi
-
 if [ "$#" -eq 0 ] || [ "$#" -gt 2 ]
 then
   printf 'Usage: %s [options] <input-image> [mask-image]\n' "$0"
+  exit 1
+fi
+
+if tty <&1 >/dev/null
+then
+  printf "I won't write DjVu data to a terminal.\n" >&2
   exit 1
 fi
 
