@@ -1,0 +1,75 @@
+#!/usr/bin/python
+# encoding=UTF-8
+
+# Copyright © 2008, 2010 Jakub Wilk <jwilk@jwilk.net>
+#
+# Redistribution and use in source and compiled forms, with or without
+# modification, are permitted under any circumstances. No warranty.
+
+'''
+Compose a multi-page indirect DjVu document in an effective way.
+'''
+
+from __future__ import with_statement
+
+import argparse
+import itertools
+import os
+import shutil
+import struct
+import subprocess
+
+DJVU_TEMPLATE = 'AT&TFORM\0\0\0\0DJVMDIRM\0\0\0\0'
+DJVU_VERSION = 1
+
+def main():
+    description = __doc__.strip()
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument('-f', '--force', help=argparse.SUPPRESS)
+    parser.add_argument('index', metavar='INDEX', help='index DjVu file (output)')
+    parser.add_argument('page', metavar='PAGE', nargs='+', help='component DjVu files (input)')
+    options = parser.parse_args()
+    page_ids = []
+    page_sizes = []
+    index_filename = options.index
+    index_dirname = os.path.dirname(index_filename)
+    for file_name in options.page:
+        dir_name, base_name = os.path.split(file_name)
+        if dir_name != index_dirname:
+            raise ValueError('All files needs to be in the same directory')
+        page_size = os.path.getsize(file_name)
+        if page_size >= 1 << 24:
+            page_size = 0
+        page_sizes += [page_size]
+        page_ids += [base_name]
+    with open(index_filename, 'wb') as index_file:
+        index_file.write(DJVU_TEMPLATE)
+        index_file.write(struct.pack('B', DJVU_VERSION))
+        index_file.write(struct.pack('>H', len(page_ids)))
+        index_file.flush()
+        bzz = subprocess.Popen(['bzz', '-e', '-', '-'], stdin=subprocess.PIPE, stdout=index_file)
+        try:
+            for page_size in page_sizes:
+                bzz.stdin.write(struct.pack('>I', page_size)[1:])
+            for page_id in page_ids:
+                bzz.stdin.write(struct.pack('>B', 1))
+            for page_id in page_ids:
+                bzz.stdin.write(page_id)
+                bzz.stdin.write('\0')
+        finally:
+            bzz.stdin.close()
+            bzz.wait()
+        index_file_size = index_file.tell()
+        i = 0
+        while True:
+            i = DJVU_TEMPLATE.find('\0' * 4, i)
+            if i < 0:
+                break
+            index_file.seek(i)
+            index_file.write(struct.pack('>I', index_file_size - i - 4))
+            i += 4
+
+if __name__ == '__main__':
+    main()
+
+# vim:ts=4 sw=4 et
