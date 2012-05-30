@@ -12,6 +12,6 @@ then
 fi
 uri="$1"
 wget -nv -- "$1"
-base=`printf '%s' "$uri" | sed -e 's/\(.*\)[/].*/\1/'`
-index=`printf '%s' "$uri" | sed -e 's/.*[/]\(.*\)/\1/'`
-printf "$base/%s\n" `djvudump "$index" | sed -n -e '/.*-> \(.*\)/ { s//\1/p; }'` | wget -nv -i -
+base=$(printf '%s' "$uri" | sed -e 's/\(.*\)[/].*/\1/')
+index=$(printf '%s' "$uri" | sed -e 's/.*[/]\(.*\)/\1/')
+printf "$base/%s\n" $(djvudump "$index" | sed -n -e '/.*-> \(.*\)/ { s//\1/p; }') | wget -nv -i -
