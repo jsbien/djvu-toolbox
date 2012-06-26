@@ -54,7 +54,7 @@ def main():
         with open(file, 'r+b') as file:
             fix_file(file, options)
 
-def fix_file(file, options)
+def fix_file(file, options):
     header = file.read(8)
     if header != 'AT&TFORM':
         raise InvalidDjVu(file.name)
