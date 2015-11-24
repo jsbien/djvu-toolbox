@@ -3,7 +3,7 @@
 # To the extent possible under law, Jakub Wilk has waived all copyright and
 # related or neighboring rights to this work:
 #
-# http://creativecommons.org/publicdomain/zero/1.0/
+# https://creativecommons.org/publicdomain/zero/1.0/
 
 if [ $# -ne 1 ]
 then
