@@ -7,11 +7,13 @@
 
 if [ $# -ne 1 ]
 then
-  echo "Usage: $0 <uri>"
-  exit 1
+    echo "Usage: $0 <uri>"
+    exit 1
 fi
 uri="$1"
 wget -nv -- "$1"
 base=$(printf '%s' "$uri" | sed -e 's/\(.*\)[/].*/\1/')
 index=$(printf '%s' "$uri" | sed -e 's/.*[/]\(.*\)/\1/')
 printf "$base/%s\n" $(djvudump "$index" | sed -n -e '/.*-> \(.*\)/ { s//\1/p; }') | wget -nv -i -
+
+# vim:ts=4 sts=4 sw=4 et
