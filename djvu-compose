@@ -28,9 +28,7 @@ Compose a multi-page indirect DjVu document in an efficient way.
 from __future__ import with_statement
 
 import argparse
-import itertools
 import os
-import shutil
 import struct
 import subprocess
 
