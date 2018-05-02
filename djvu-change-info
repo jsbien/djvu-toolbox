@@ -91,12 +91,12 @@ def fix_file(file, options):
 if __name__ == '__main__':
     try:
         main()
-    except InvalidDjVu, exc:
+    except InvalidDjVu as exc:
         print >>sys.stderr, (
             "error: {file}: doesn't look like a DjVu document"
         ).format(file=exc)
         sys.exit(1)
-    except UnexpectedDjVuStructure, exc:
+    except UnexpectedDjVuStructure as exc:
         print >>sys.stderr, (
             'error: {file}: {prog} can process only single-page DjVu documents'
         ).format(prog=sys.argv[0], file=exc)
