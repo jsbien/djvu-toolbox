@@ -25,6 +25,8 @@ import argparse
 import struct
 import sys
 
+b''  # Python >= 2.6 is required
+
 class InvalidDjVu(Exception):
     pass
 
