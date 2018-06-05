@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+# encoding=UTF-8
+
+# Copyright © 2007-2018 Jakub Wilk <jwilk@jwilk.net>
+# SPDX-License-Identifier: MIT
+
 from sys import argv, stdout
 from subprocess import Popen as popen, PIPE
 
