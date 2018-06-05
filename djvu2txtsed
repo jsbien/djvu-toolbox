@@ -4,19 +4,19 @@
 # Copyright © 2007-2018 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
-from sys import argv, stdout
-from subprocess import Popen as popen, PIPE
+import sys
+import subprocess
 
-file_name = argv[1]
+file_name = sys.argv[1]
 
-p = popen(['/usr/bin/djvused', '-e', 'output-txt', file_name], stdout=PIPE)
+p = subprocess.Popen(['/usr/bin/djvused', '-e', 'output-txt', file_name], stdout=subprocess.PIPE)
 n = 1
 try:
     for line in p.stdout:
         if line.startswith("select '"):
             line = 'select %d\n' % n
             n += 1
-        stdout.write(line)
+        sys.stdout.write(line)
 finally:
     p.wait()
 
