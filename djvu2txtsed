@@ -4,12 +4,15 @@
 # Copyright © 2007-2018 Jakub Wilk <jwilk@jwilk.net>
 # SPDX-License-Identifier: MIT
 
+import argparse
 import sys
 import subprocess
 
-file_name = sys.argv[1]
+ap = argparse.ArgumentParser()
+ap.add_argument('path', metavar='FILE')
+options = ap.parse_args()
 
-p = subprocess.Popen(['/usr/bin/djvused', '-e', 'output-txt', file_name], stdout=subprocess.PIPE)
+p = subprocess.Popen(['/usr/bin/djvused', '-e', 'output-txt', options.path], stdout=subprocess.PIPE)
 n = 1
 try:
     for line in p.stdout:
